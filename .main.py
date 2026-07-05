@@ -1,4 +1,5 @@
 import pygame as py
+import random as rd
 
 py.init() 
 clock = py.time.Clock()
@@ -44,12 +45,12 @@ text2 = font.render("0", True, (255,255,255))
 screen.blit(text2,(txt2x,txt2y))
 
 #rectangle shape
-rect1 = rectangle(50,200,50,100,(255,255,255))
+rect1 = rectangle(50,325,30,150,(255,255,255))
 rect1.make_rect()
 rect1.draw()
 
 #rectangle 2 shape
-rect2 = rectangle(1100,200,50,100,(255,255,255))
+rect2 = rectangle(1120,325,30,150,(255,255,255))
 rect2.make_rect()
 rect2.draw()
 
@@ -62,11 +63,29 @@ bottom_border = rectangle(0,l+10,w,10,(255,255,255))
 bottom_border.make_rect()
 bottom_border.draw()
 
+#goals
+left_goal = rectangle(-10,0,10,l,(255,255,255))
+left_goal.make_rect()
+left_goal.draw()
+
+right_goal = rectangle(w,0,10,l,(255,255,255))
+right_goal.make_rect()
+right_goal.draw()
+
 #line
 thickness = 4
 line = rectangle(600-thickness//2,0,thickness,l,(255,255,255))
 line.make_rect()
 line.draw()
+
+#ball
+ball = rectangle(600,400,20,20,(255,255,255))
+ball.make_rect()
+ball.draw()
+
+start_ball_speed = 5
+ball.dx = rd.choice([-start_ball_speed, start_ball_speed])
+ball.dy = rd.choice([-start_ball_speed, start_ball_speed])
 
 #collision
 def check_collision(shape1,shape2):
@@ -120,6 +139,8 @@ while running:
     if py.Rect.colliderect(rect2.rectangle,bottom_border.rectangle):
         rect2.rectangle.y -= 10
 
+    
+
     screen.fill((r,g,b))
     screen.blit(text1,(txt1x,txt1y))
     screen.blit(text2,(txt2x,txt2y))
@@ -127,6 +148,9 @@ while running:
     rect2.draw()
     top_border.draw()
     bottom_border.draw()
+    left_goal.draw()
+    right_goal.draw()
     line.draw()
+    ball.draw()
     clock.tick(60)
     py.display.update()
