@@ -87,28 +87,10 @@ start_ball_speed = 5
 ball.dx = rd.choice([-start_ball_speed, start_ball_speed])
 ball.dy = rd.choice([-start_ball_speed, start_ball_speed])
 
-#collision
-def check_collision(shape1,shape2):
-    ##somehow make both shapes have same class
-    if py.Rect.colliderect(shape1.rectangle,shape2.rectangle):
-        print("collide")
-        return
-
 #game loop
 pressed = False
 running = True
 clicked = False
-
-def key_pressed(player):
-    keys = py.key.get_pressed()
-    if keys[py.K_LEFT]:
-        player.x -= 10
-    if keys[py.K_RIGHT]:
-        player.x += 10
-    if keys[py.K_UP]:
-        player.y -= 10
-    if keys[py.K_DOWN]:
-        player.y += 10
 
 while running:
     
@@ -138,8 +120,6 @@ while running:
 
     if py.Rect.colliderect(rect2.rectangle,bottom_border.rectangle):
         rect2.rectangle.y -= 10
-
-    
 
     screen.fill((r,g,b))
     screen.blit(text1,(txt1x,txt1y))
