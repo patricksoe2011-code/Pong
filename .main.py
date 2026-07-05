@@ -1,6 +1,7 @@
 import pygame as py
 
-py.init()
+py.init() 
+clock = py.time.Clock()
 
 #rectangle
 class rectangle():
@@ -19,8 +20,8 @@ class rectangle():
         py.draw.rect(screen,self.color,self.rectangle)
 
 # screen
-w = 1500
-l = 900
+w = 1200
+l = 800
 r = 0
 g = 0
 b = 0
@@ -30,26 +31,47 @@ screen.fill((r,g,b))
 py.display.flip()
 
 # text
-font = py.font.SysFont("Times New Roman",20)
+font = py.font.Font("font.ttf", 100)
 
-text = font.render("idk", True, (255,0,255))
-screen.blit(text,(100,100))
+txt1x = 275
+txt1y = 20
+text1 = font.render("0", True, (255,255,255))
+screen.blit(text1,(txt1x,txt1y))
+
+txt2x = 875
+txt2y = 20
+text2 = font.render("0", True, (255,255,255))
+screen.blit(text2,(txt2x,txt2y))
 
 #rectangle shape
-rect1 = rectangle(100,200,100,100,(0,255,0))
+rect1 = rectangle(50,200,50,100,(255,255,255))
 rect1.make_rect()
 rect1.draw()
 
-#ellipse shape
+#rectangle 2 shape
+rect2 = rectangle(1100,200,50,100,(255,255,255))
+rect2.make_rect()
+rect2.draw()
 
+#border
+top_border = rectangle(0,-10,w,10,(255,255,255))
+top_border.make_rect()
+top_border.draw()
 
-#insert image
+bottom_border = rectangle(0,l+10,w,10,(255,255,255))
+bottom_border.make_rect()
+bottom_border.draw()
 
+#line
+thickness = 4
+line = rectangle(600-thickness//2,0,thickness,l,(255,255,255))
+line.make_rect()
+line.draw()
 
 #collision
 def check_collision(shape1,shape2):
     ##somehow make both shapes have same class
-    if py.Rect.colliderect(shape1.rectangle,shape2.ellipse):
+    if py.Rect.colliderect(shape1.rectangle,shape2.rectangle):
         print("collide")
         return
 
@@ -57,46 +79,54 @@ def check_collision(shape1,shape2):
 pressed = False
 running = True
 clicked = False
+
+def key_pressed(player):
+    keys = py.key.get_pressed()
+    if keys[py.K_LEFT]:
+        player.x -= 10
+    if keys[py.K_RIGHT]:
+        player.x += 10
+    if keys[py.K_UP]:
+        player.y -= 10
+    if keys[py.K_DOWN]:
+        player.y += 10
+
 while running:
     
     for event in py.event.get():
-        if event.type == py.QUIT:
+        if event.type == py.QUIT or (event.type == py.KEYDOWN and event.key == py.K_ESCAPE):
             running = False
 
-    if event.type == py.KEYDOWN and pressed == False:
+    keys = py.key.get_pressed()
+    if keys[py.K_w]:
+        rect1.rectangle.y -= 10
+    if keys[py.K_s]:
+        rect1.rectangle.y += 10
 
-        pressed = True
+    if keys[py.K_UP] or keys[py.K_i]:
+        rect2.rectangle.y -= 10
+    if keys[py.K_DOWN] or keys[py.K_k]:
+        rect2.rectangle.y += 10
 
-        if event.key == py.K_LEFT:
-            print("left arrow pressed")
-            rect1.rectangle.move_ip(-50,0)
-            
-        if event.key == py.K_RIGHT:
-            print("right arrow pressed")
-            rect1.rectangle.move_ip(50,0)
+    if py.Rect.colliderect(rect1.rectangle,top_border.rectangle):
+        rect1.rectangle.y += 10
 
-        if event.key == py.K_UP:
-            print("up arrow pressed")
-            rect1.rectangle.move_ip(0,-50)
+    if py.Rect.colliderect(rect2.rectangle,top_border.rectangle):
+        rect2.rectangle.y += 10
 
-        if event.key == py.K_DOWN:
-            print("down arrow pressed")
-            rect1.rectangle.move_ip(0,50)
+    if py.Rect.colliderect(rect1.rectangle,bottom_border.rectangle):
+        rect1.rectangle.y -= 10
 
-    elif event.type == py.KEYUP:
-        pressed = False
-    
-    if event.type == py.MOUSEBUTTONDOWN and clicked == False:
-        clicked = True
-        print("clicked")
-        print(py.mouse.get_pos())
-
-        if rect1.rectangle.collidepoint(py.mouse.get_pos()):
-            rect1.rectangle.scale_by_ip(1.5,3)
-    elif event.type == py.MOUSEBUTTONUP:
-        clicked = False
+    if py.Rect.colliderect(rect2.rectangle,bottom_border.rectangle):
+        rect2.rectangle.y -= 10
 
     screen.fill((r,g,b))
-    screen.blit(text,(100,100))
+    screen.blit(text1,(txt1x,txt1y))
+    screen.blit(text2,(txt2x,txt2y))
     rect1.draw()
+    rect2.draw()
+    top_border.draw()
+    bottom_border.draw()
+    line.draw()
+    clock.tick(60)
     py.display.update()
